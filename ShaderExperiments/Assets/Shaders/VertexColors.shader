@@ -14,9 +14,12 @@ Shader "Unlit/VertexColors"
             CGPROGRAM
             
             // 1. get the vertex colors [X]
-            // 2. move them to the fragment shader [ ]
-            // 3. return vertex colors to the screen [ ]
-            // 4. Profit [ ]
+            // 2. move them to the fragment shader [X]
+            // 3. return vertex colors to the screen [X]
+            // 4. mask the texture with the vertex color [X]
+            // 5. add textures for green and blue channel [ ]
+            // ???
+            // Profit [ ]
             
             
             #pragma vertex vert
@@ -57,8 +60,8 @@ Shader "Unlit/VertexColors"
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col = i.vertexColor;
+                fixed4 redTexture = tex2D(_MainTex, i.uv);
+                redTexture *= i.vertexColor.r;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
