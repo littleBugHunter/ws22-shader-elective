@@ -2,7 +2,9 @@ Shader "Unlit/VertexColors"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _RedTex ("Red Texture", 2D) = "white" {}
+        _GreenTex ("Green Texture", 2D) = "white" {}
+        _BlueTex ("Blue Texture", 2D) = "white" {}
     }
     SubShader
     {
@@ -43,15 +45,17 @@ Shader "Unlit/VertexColors"
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
-
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
+            
+            sampler2D _RedTex;
+            sampler2D _GreenTex;
+            sampler2D _BlueTex;
+            float4 _RedTex_ST;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv = TRANSFORM_TEX(v.uv, _RedTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 o.vertexColor = v.vertexColor;
                 return o;
@@ -59,12 +63,19 @@ Shader "Unlit/VertexColors"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 redTexture = tex2D(_MainTex, i.uv);
+                // ============ RED TEXTURE ============
+                fixed4 redTexture = tex2D(_RedTex, i.uv);
                 redTexture *= i.vertexColor.r;
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, redTexture);
-                return redTexture;
+                // ============ GREEN TEXTURE ============
+                fixed4 greenTexture = tex2D(_GreenTex, i.uv);
+                greenTexture *= i.vertexColor.g;
+                
+                // ============ BLUE TEXTURE ============
+                fixed4 blueTexture = tex2D(_BlueTex, i.uv);
+                blueTexture *= i.vertexColor.b;
+
+
+                return redTexture + greenTexture + blueTexture;
             }
             ENDCG
         }
