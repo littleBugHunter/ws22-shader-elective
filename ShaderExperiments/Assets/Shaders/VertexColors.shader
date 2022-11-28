@@ -63,8 +63,8 @@ Shader "Unlit/VertexColors"
                 fixed4 redTexture = tex2D(_MainTex, i.uv);
                 redTexture *= i.vertexColor.r;
                 // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                UNITY_APPLY_FOG(i.fogCoord, redTexture);
+                return redTexture;
             }
             ENDCG
         }
