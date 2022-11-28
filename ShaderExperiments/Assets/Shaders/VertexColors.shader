@@ -67,6 +67,7 @@ Shader "Unlit/VertexColors"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 baseTexture = tex2D(_MainTex, i.uv);
+                baseTexture *= clamp(1-(i.vertexColor.r + i.vertexColor.g + i.vertexColor.b), 0, 1);
 
                 // ============ RED TEXTURE ============
                 fixed4 redTexture = tex2D(_RedTex, i.uv);
@@ -79,7 +80,7 @@ Shader "Unlit/VertexColors"
                 blueTexture *= i.vertexColor.b;
 
 
-                return redTexture + greenTexture + blueTexture;
+                return baseTexture + redTexture + greenTexture + blueTexture;
             }
             ENDCG
         }
