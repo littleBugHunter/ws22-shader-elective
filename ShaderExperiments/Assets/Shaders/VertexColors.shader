@@ -20,7 +20,8 @@ Shader "Unlit/VertexColors"
             // 2. move them to the fragment shader [X]
             // 3. return vertex colors to the screen [X]
             // 4. mask the texture with the vertex color [X]
-            // 5. add textures for green and blue channel [ ]
+            // 5. add textures for green and blue channel [X]
+            // 6. Show the MainTex wherever no other texture is showing [ ]
             // ???
             // Profit [ ]
             
