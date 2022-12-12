@@ -2,7 +2,9 @@ Shader "Unlit/SpecularLight"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _MainTex       ("Texture", 2D) = "white" {}
+        _Roughness     ("Roughness", Float) = 10
+        _SpecularColor ("Specular Color", Color) = (1.0, 1.0, 1.0, 1.0)
     }
     SubShader
     {
@@ -14,7 +16,7 @@ Shader "Unlit/SpecularLight"
           - Light Direction [x]
           - Light Color     [x]
           - Normal          [x]
-          - View Direction  [ ]
+          - View Direction  [x]
         - Create Properties
           - Roughness/Glossiness
           - Specular Color
@@ -53,7 +55,10 @@ Shader "Unlit/SpecularLight"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            float4    _MainTex_ST;
+            float     _Roughness;
+            float4    _SpecularColor;
+
 
             // this is already declared in "UnityCG.cginc"
             // float4 _WorldSpaceLightPos0;
