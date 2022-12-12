@@ -35,8 +35,9 @@ Shader "Unlit/SpecularLight"
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
-
+            
             #include "UnityCG.cginc"
+            #include "ElectiveLighting.cginc"
 
             struct appdata
             {
@@ -62,7 +63,6 @@ Shader "Unlit/SpecularLight"
 
             // this is already declared in "UnityCG.cginc"
             // float4 _WorldSpaceLightPos0;
-            fixed4 _LightColor0;
 
             v2f vert (appdata v)
             {
@@ -76,51 +76,11 @@ Shader "Unlit/SpecularLight"
                 return o;
             }
 
-            float lightFalloff(float distance) {
-                return 1/(distance * distance);
-            }
-
-            float lambertLighting(float3 lightDirection, float3 normal) {
-                return clamp(dot(lightDirection, normal),0,1);
-            }
-
-            float blinnPhong(float3 viewDirection, float3 lightDirection, float3 normal) {
-                float3 halfLightView = normalize(lightDirection + viewDirection);
-                float  halfLightAngle = clamp(dot(halfLightView, normal),0,1);
-                return pow(halfLightAngle, _Roughness);
-            }
-
             fixed4 frag (v2f i) : SV_Target
             {
                 i.normal = normalize(i.normal);
-                // Calculate Light Direction and Distance
-                float3 lightDirection;
-                float  lightDistance;
-                float3 viewDirection = normalize(_WorldSpaceCameraPos - i.worldPos);
-
-                if(_WorldSpaceLightPos0.w == 0.0) {
-                    // We have a directional Light
-                    lightDirection = _WorldSpaceLightPos0.xyz;
-                    lightDistance = 1;
-                } else {
-                    // We have a point Light
-                    float3 lightPos = _WorldSpaceLightPos0.xyz;
-                    float3 worldPos = i.worldPos;
-                    lightDirection = normalize(lightPos - worldPos);
-                    lightDistance  = distance (lightPos,  worldPos);
-                }
-
                 fixed4 albedo = tex2D(_MainTex, i.uv);
-
-                fixed3 incomingLight = _LightColor0 * lightFalloff(lightDistance);
-
-                fixed3 diffuseLight  = lambertLighting(lightDirection, i.normal)           * albedo;
-                fixed3 specularLight = blinnPhong(viewDirection, lightDirection, i.normal) * _SpecularColor;
-                
-                fixed3 lightCol      = incomingLight * (diffuseLight + specularLight);
-
-                lightCol += UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
-
+                fixed3 lightCol      = calculateLighting(i.normal, i.worldPos, albedo, _Roughness, _SpecularColor);
                 fixed4 col = fixed4(0,0,0,1);
                 col.rgb += lightCol;
                 
