@@ -119,6 +119,8 @@ Shader "Unlit/SpecularLight"
                 
                 fixed3 lightCol      = incomingLight * (diffuseLight + specularLight);
 
+                lightCol += UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
+
                 fixed4 col = fixed4(0,0,0,1);
                 col.rgb += lightCol;
                 
