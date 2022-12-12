@@ -86,7 +86,7 @@ Shader "Unlit/SpecularLight"
 
             float blinnPhong(float3 viewDirection, float3 lightDirection, float3 normal) {
                 float3 halfLightView = normalize(lightDirection + viewDirection);
-                float  halfLightAngle = dot(halfLightView, normal);
+                float  halfLightAngle = clamp(dot(halfLightView, normal),0,1);
                 return pow(halfLightAngle, _Roughness);
             }
 
