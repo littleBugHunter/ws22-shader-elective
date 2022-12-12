@@ -11,10 +11,10 @@ Shader "Unlit/SpecularLight"
 
         /*
         - Get our Variables
-          - Light Direction
-          - Light Color
-          - Normal
-          - View Direction
+          - Light Direction [x]
+          - Light Color     [x]
+          - Normal          [x]
+          - View Direction  [ ]
         - Create Properties
           - Roughness/Glossiness
           - Specular Color
@@ -25,7 +25,6 @@ Shader "Unlit/SpecularLight"
           - take it to the power of Roughness
           - multiply everything together
         */
-
 
         Pass
         {
@@ -50,7 +49,7 @@ Shader "Unlit/SpecularLight"
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 float3 normal : NORMAL; 
-                float3 worldPos : TEXCOORD1; // <----------
+                float3 worldPos : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -85,6 +84,7 @@ Shader "Unlit/SpecularLight"
                 // Calculate Light Direction and Distance
                 float3 lightDirection;
                 float  lightDistance;
+                float3 viewDirection = normalize(i.worldPos - _WorldSpaceCameraPos);
 
                 if(_WorldSpaceLightPos0.w == 0.0) {
                     // We have a directional Light
