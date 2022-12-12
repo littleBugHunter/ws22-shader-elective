@@ -21,10 +21,17 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 01d47d988863ac74a9e3e132a964df28, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: bc03350914e616e4d866530d194156ff, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _NoiseStrength: 0.4
+    - _Roughness: 30
+    m_Colors:
+    - _SpecularColor: {r: 0.6084906, g: 0.95017016, b: 1, a: 1}
   m_BuildTextureStacks: []
