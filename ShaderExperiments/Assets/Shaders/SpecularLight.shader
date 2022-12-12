@@ -18,8 +18,8 @@ Shader "Unlit/SpecularLight"
           - Normal          [x]
           - View Direction  [x]
         - Create Properties
-          - Roughness/Glossiness
-          - Specular Color
+          - Roughness/Glossiness [x]
+          - Specular Color       [x]
         - Create BlinnPhong Function
           - Get the halfDir (normalized sum of lightDir and viewDir)
           - Get the angle between halfDir and Normal
@@ -84,12 +84,19 @@ Shader "Unlit/SpecularLight"
                 return clamp(dot(lightDirection, normal),0,1);
             }
 
+            float blinnPhong(float3 viewDirection, float3 lightDirection, float3 normal) {
+                float3 halfLightView = normalize(lightDirection + viewDirection);
+                float  halfLightAngle = dot(halfLightView, normal);
+                return pow(halfLightAngle, _Roughness);
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
+                i.normal = normalize(i.normal);
                 // Calculate Light Direction and Distance
                 float3 lightDirection;
                 float  lightDistance;
-                float3 viewDirection = normalize(i.worldPos - _WorldSpaceCameraPos);
+                float3 viewDirection = normalize(_WorldSpaceCameraPos - i.worldPos);
 
                 if(_WorldSpaceLightPos0.w == 0.0) {
                     // We have a directional Light
@@ -105,15 +112,16 @@ Shader "Unlit/SpecularLight"
 
                 fixed4 albedo = tex2D(_MainTex, i.uv);
 
-                fixed3 lightCol = _LightColor0 * 
-                                  lightFalloff(lightDistance) *
-                                  lambertLighting(lightDirection, i.normal) *
-                                  albedo;
+                fixed3 incomingLight = _LightColor0 * lightFalloff(lightDistance);
+
+                fixed3 diffuseLight  = lambertLighting(lightDirection, i.normal)           * albedo;
+                fixed3 specularLight = blinnPhong(viewDirection, lightDirection, i.normal) * _SpecularColor;
                 
+                fixed3 lightCol      = incomingLight * (diffuseLight + specularLight);
+
                 fixed4 col = fixed4(0,0,0,1);
                 col.rgb += lightCol;
                 
-
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
