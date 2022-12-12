@@ -6,6 +6,7 @@ Shader "Unlit/Snow"
         _NoiseTex ("Noise", 2D)  = "grey" {}
         _Roughness     ("Roughness", Float) = 10
         _SpecularColor ("Specular Color", Color) = (1.0, 1.0, 1.0, 1.0)
+        _NoiseStrength ("Noise Strength", Float) = 0.1
     }
     SubShader
     {
@@ -62,6 +63,36 @@ Shader "Unlit/Snow"
                 return o;
             }
 
+            
+            float3 calculateLightingSnow(float3 normal, float3 noisyNormal, float3 worldPos, float3 albedo, float roughness, float3 specularColor) {
+                // Calculate Light Direction and Distance
+                float3 lightDirection;
+                float  lightDistance;
+                float3 viewDirection = normalize(_WorldSpaceCameraPos - worldPos);
+
+                if(_WorldSpaceLightPos0.w == 0.0) {
+                    // We have a directional Light
+                    lightDirection = _WorldSpaceLightPos0.xyz;
+                    lightDistance = 1;
+                } else {
+                    // We have a point Light
+                    float3 lightPos = _WorldSpaceLightPos0.xyz;
+                    lightDirection = normalize(lightPos - worldPos);
+                    lightDistance  = distance (lightPos,  worldPos);
+                }
+
+                fixed3 incomingLight = _LightColor0 * lightFalloff(lightDistance);
+
+                fixed3 diffuseLight  = lambertLighting(lightDirection, normal)           * albedo;
+                fixed3 specularLight = blinnPhong(viewDirection, lightDirection, noisyNormal, roughness) * specularColor;
+                
+                fixed3 lightCol      = incomingLight * (diffuseLight + specularLight);
+
+                lightCol += UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
+
+                return lightCol;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 i.normal = normalize(i.normal);
@@ -71,9 +102,10 @@ Shader "Unlit/Snow"
                 noise *= 2;
                 noise -= 1;
 
-                i.normal += noise * _NoiseStrength;
+                float3 noisyNormal = i.normal + noise * _NoiseStrength;
+                noisyNormal = normalize(noisyNormal);
 
-                fixed3 lightCol      = calculateLighting(i.normal, i.worldPos, albedo, _Roughness, _SpecularColor);
+                fixed3 lightCol      = calculateLightingSnow(i.normal, noisyNormal, i.worldPos, albedo, _Roughness, _SpecularColor);
                 fixed4 col = fixed4(0,0,0,1);
                 col.rgb += lightCol;
                 
