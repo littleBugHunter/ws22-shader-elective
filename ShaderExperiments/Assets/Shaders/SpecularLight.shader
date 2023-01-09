@@ -80,7 +80,7 @@ Shader "Unlit/SpecularLight"
             {
                 i.normal = normalize(i.normal);
                 fixed4 albedo = tex2D(_MainTex, i.uv);
-                fixed3 lightCol      = calculateLighting(i.normal, i.worldPos, albedo, _Roughness, _SpecularColor);
+                fixed3 lightCol = calculateLighting(i.normal, i.worldPos, albedo, _Roughness, _SpecularColor);
                 fixed4 col = fixed4(0,0,0,1);
                 col.rgb += lightCol;
                 
