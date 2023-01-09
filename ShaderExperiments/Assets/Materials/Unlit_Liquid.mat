@@ -28,7 +28,7 @@ Material:
     m_Floats:
     - _BaseTransparency: 0.37
     - _FresnelPower: 1.9
-    - _Glossiness: 68.2
+    - _Glossiness: 16.8
     m_Colors:
     - _Color: {r: 1, g: 0.08962262, b: 0.79317135, a: 1}
     - _CutoffNormal: {r: -0.024101065, g: 0.9910555, b: -0.13125625, a: 0}

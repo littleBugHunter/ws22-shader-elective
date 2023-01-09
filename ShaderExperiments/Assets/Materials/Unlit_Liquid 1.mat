@@ -30,7 +30,7 @@ Material:
     - _FresnelPower: 1.9
     - _Glossiness: 68.2
     m_Colors:
-    - _Color: {r: 1, g: 0.08962262, b: 0.79317135, a: 1}
+    - _Color: {r: 0.13834137, g: 1, b: 0.09019607, a: 1}
     - _CutoffNormal: {r: -0.024101065, g: 0.9910555, b: -0.13125625, a: 0}
     - _CutoffPosition: {r: -1.9174939, g: 0.08298096, b: -6.89937, a: 0}
   m_BuildTextureStacks: []

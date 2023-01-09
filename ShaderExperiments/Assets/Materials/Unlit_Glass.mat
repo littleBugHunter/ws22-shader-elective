@@ -26,9 +26,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BaseTransparency: 0.06
-    - _FresnelPower: 5.41
-    - _Glossiness: 57.9
+    - _BaseTransparency: 0.05
+    - _FresnelPower: 4.4
+    - _Glossiness: 357.5
     - _Roughness: 100.3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
