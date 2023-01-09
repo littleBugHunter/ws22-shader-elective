@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_Glass
-  m_Shader: {fileID: 4800000, guid: e18bfd8f6c4f805408e2136f8593dcb4, type: 3}
+  m_Name: Unlit_Liquid
+  m_Shader: {fileID: 4800000, guid: 6d31513046d897a449675172121fa097, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -26,10 +26,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BaseTransparency: 0.06
-    - _FresnelPower: 5.41
-    - _Glossiness: 57.9
-    - _Roughness: 100.3
+    - _BaseTransparency: 0.37
+    - _FresnelPower: 1.9
+    - _Glossiness: 68.2
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.08962262, b: 0.79317135, a: 1}
+    - _CutoffNormal: {r: -0.024101065, g: 0.9910555, b: -0.13125625, a: 0}
+    - _CutoffPosition: {r: -1.9174939, g: 0.08298096, b: -6.89937, a: 0}
   m_BuildTextureStacks: []

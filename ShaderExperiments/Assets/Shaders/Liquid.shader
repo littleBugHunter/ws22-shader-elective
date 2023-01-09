@@ -1,4 +1,4 @@
-Shader "Unlit/Glass"
+Shader "Unlit/Liquid"
 {
     Properties
     {
@@ -7,12 +7,15 @@ Shader "Unlit/Glass"
         _FresnelPower ("Fresnel Power", Float) = 1
         _Glossiness ("Glossiness", Float) = 1
         _BaseTransparency("Base Transparency", Float) = 0.1
+        [PerRendererData]
+        _CutoffPosition ("Cutoff Position", Vector) = (0,0,0,0)
+        [PerRendererData]
+        _CutoffNormal ("Cutoff Normal", Vector) = (0,0,0,0)
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent"}
-        Blend One One
-        ZWrite Off
+        Tags { "RenderType"="Opaque" }
+        Cull Off
 
         Pass
         {
@@ -60,9 +63,20 @@ Shader "Unlit/Glass"
             float  _FresnelPower;
             float  _Glossiness;
             float  _BaseTransparency;
+            float3 _CutoffPosition;
+            float3 _CutoffNormal;
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i, bool isFacingForward : SV_IsFrontFace ) : SV_Target
             {
+                float3 gizmoVector = i.worldPos - _CutoffPosition;
+
+                if(dot(_CutoffNormal, gizmoVector) > 0) {
+                    discard;
+                }
+                if(!isFacingForward) {
+                    // back faces willl all have a normal that faces up
+                    i.normal = _CutoffNormal;
+                }
                 i.normal = normalize(i.normal);
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
@@ -73,6 +87,7 @@ Shader "Unlit/Glass"
                 float inverseFacing = 1-facing;
                 float fresnel = pow(inverseFacing, _FresnelPower);
                 fresnel = lerp(_BaseTransparency, 1, fresnel);
+
 
                 // BlinnPhong goes here
                 float3 lighting = calculateLighting(i.normal, i.worldPos, float3(0,0,0), _Glossiness, float3(1,1,1));
